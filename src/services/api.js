@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({baseURL:"http://localhost:9065/"});
+const API = axios.create({baseURL:"https://jobportal-rpam.onrender.com/"});
 
 // Attach token automatically
 API.interceptors.request.use((req) => {
