@@ -5,8 +5,8 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 
 function Login() {
   const [form, setForm] = useState({
-    email: "sujeet@gmail.com",
-    password: "123456"
+    email: "",
+    password: ""
   });
 
   const [error, setError] = useState("");
