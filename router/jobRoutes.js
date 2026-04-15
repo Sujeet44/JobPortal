@@ -57,21 +57,21 @@ jobRouter.get("/jobs/getJobs", optionalAuth, async (req, res) => {
     // Search filter
     if (search) {
       query.$or = [
-        { title: { $regex: search, $options: "i" } },
-        { company: { $regex: search, $options: "i" } },
-        { requiredSkills: { $regex: search, $options: "i" } }
+        { title: { $regex: `^${search}`, $options: "i" } },
+        { company: { $regex: `^${search}`, $options: "i" } },
+        { requiredSkills: { $regex: `^${search}`, $options: "i" } }
       ];
     }
 
     if (location) {
-      query.location = { $regex: location, $options: "i" };
+      query.location = { $regex: `^${location}`, $options: "i" };
     }
 
     // Exclude jobs already applied by user
     if (req.user) {
       query.applicants = { $ne: req.user.id };
     } 
-
+    
     const totalJobs = await Job.countDocuments(query);
 
     const jobs = await Job.find(query)

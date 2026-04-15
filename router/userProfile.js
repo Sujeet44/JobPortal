@@ -3,8 +3,52 @@ import express from 'express';
 import protect from '../middleware/authMiddleware.js';
 import { upload } from "../middleware/upload.js";
 import {uploadPhoto} from "../middleware/uploadPhoto.js"
+import axios from 'axios';
 
 const userProfileRouter = express.Router();
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent";
+
+userProfileRouter.get("/ai-skills",async(req,res)=>{
+  try {
+    const { query } = req.query;
+
+    if (!query) return res.json([]);
+
+    const response = await axios.post(
+      `${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`,
+      {
+        contents: [
+          {
+            parts: [
+              {
+                text: `Suggest 5 technical skills related to "${query}". Only return comma-separated skills. No explanation.`
+              }
+            ]
+          }
+        ]
+      }
+    );
+
+    // ✅ Extract response safely
+    const text =
+      response.data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+    // ✅ Convert to array
+    const skills = text
+      .split(",")
+      .map(s => s.trim())
+      .filter(Boolean)
+      .slice(0, 5);
+
+    res.json(skills);
+
+  } catch (err) {
+    console.error("Gemini Error:", err.response?.data || err.message);
+
+    // ✅ fallback (VERY IMPORTANT)
+    // res.json(["JavaScript", "React", "Node.js"]);
+  }
+})
 
 
 userProfileRouter.get("/profile",protect,async (req, res) => {

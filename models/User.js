@@ -42,6 +42,9 @@ const userSchema = new mongoose.Schema(
         unique:true
       },
     ],
+    otp: Number,
+    otpExpiry: Date,
+    activeToken:String
   },
   { timestamps: true },
 );
