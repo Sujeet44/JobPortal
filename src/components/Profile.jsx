@@ -20,6 +20,7 @@ const Profile = () => {
   }, []);
 
   const handleChange = (e) => {
+    setResume(e.target.value)
     setProfile({
       ...profile,
       [e.target.name]: e.target.value,
@@ -96,7 +97,7 @@ const Profile = () => {
          <div className="flex flex-col gap-2">
             <div className="flex items-center gap-3">
                 <i className="fas fa-envelope text-l text-gray-600"></i>
-                <input type="text" name="email" value={email} id="" className="outline-0" onChange={handleChange} placeholder="xyz@gmail.com"/>
+                <input type="text" name="email" value={email} id="" className="outline-0 w-80" onChange={handleChange} placeholder="xyz@gmail.com"/>
             </div>
 
             <div className="flex items-center gap-3">
@@ -111,7 +112,7 @@ const Profile = () => {
 
             <div className="flex items-center gap-3">
                <i className="fa-solid fa-brain text-l text-gray-600"></i>
-               <input type="text" placeholder="Add skill and press Enter" onKeyDown={skillsHandle}/>
+               <input type="text" placeholder="Add skill and press Enter" className="outline-0" onKeyDown={skillsHandle}/>
             </div>
          </div>
 
@@ -128,10 +129,17 @@ const Profile = () => {
 
          <div className="flex items-center justify-between gap-3 p-3 mb-5 border border-gray-300 rounded-lg w-full bg-gray-50 mt-2">
            {/* File Icon */}
-           <div className="flex items-center gap-3">
+           <div className="flex items-center gap-3">  
             <div style={{ fontSize: "28px" }}>📄</div>
             <div className="flex  flex-col">
-            <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => setResume(e.target.files[0])} />
+            <label className="cursor-pointer">
+  {resume?resume:"Upload Resume"}
+  <input
+    type="file"
+    className="hidden"
+    onChange={handleChange}
+  />
+</label>
             <small>Only .pdf,.doc,.docx are allowed</small>
             </div>
            </div>
@@ -169,7 +177,7 @@ const Profile = () => {
             
           </div>
 
-          <div className="profileBody flex flex-col gap-2 cursor-pointer">
+          <div className="profileBody flex flex-col gap-2">
             {details.map((item, index) => (
                 <div key={index} className="flex items-center gap-3">
                     <i className={`${item.icon} text-l text-gray-600`}></i>
@@ -206,7 +214,7 @@ const Profile = () => {
            </div>
          </div>
        )}
-    <button onClick={() => setIsEditing(true)} className="my-4 bg-blue-600 p-2 px-3 rounded-full cursor-pointer block ml-auto"><i class="fa-solid fa-pencil text-amber-50"></i></button>    
+    <button onClick={() => setIsEditing(true)} className="my-4 bg-blue-600 p-2 px-3 rounded-full cursor-pointer block ml-auto"><i className="fa-solid fa-pencil text-amber-50"></i></button>    
         </div>
       )}
 

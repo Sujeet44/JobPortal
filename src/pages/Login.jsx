@@ -31,7 +31,7 @@ function Login() {
       if (data.user.role === "admin") {
   navigate("/admin");
 } else {
-  navigate("/");
+  navigate("/OTP");
 }
     } catch (error) {
       setError("Invalid credentials");
@@ -39,6 +39,19 @@ function Login() {
       setLoading(false);
     }
   };
+
+ const validEmail = (e) => {
+  const value = e.target.value;
+  setForm({ ...form, email: value });
+
+  const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/;
+
+  if (!emailRegex.test(value)) {
+    setError("Invalid email pattern")
+  }else{
+    setError("")
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -63,10 +76,10 @@ function Login() {
               type="email"
               placeholder="Email"
               value={form.email}
-              onChange={(e) =>
-                setForm({ ...form, email: e.target.value })
-              }
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onChange={validEmail}
+              className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+  error ? "focus:ring-red-500 border-red-500" : "focus:ring-indigo-500"
+}`}
               required
             />
           </div>
@@ -81,7 +94,7 @@ function Login() {
               onChange={(e) =>
                 setForm({ ...form, password: e.target.value })
               }
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+               className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${error ? "focus:ring-red-500 border-red-500" : "focus:ring-indigo-500"}`}
               required
             />
           </div>

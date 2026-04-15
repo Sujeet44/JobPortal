@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
-import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaPhone, FaPhoneSquare, FaPhoneAlt } from "react-icons/fa";
 
 function Register() {
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    phoneNo:""
   });
 
   const [error, setError] = useState("");
@@ -28,13 +29,14 @@ function Register() {
     setLoading(true);
 
     try {
-      await API.post("/register", {
+      const {data} =await API.post("/register", {
         name: form.name,
         email: form.email,
-        password: form.password
+        password: form.password,
+        phoneNo: form.phoneNo
       });
+      console.log(data)
 
-      alert("Registered successfully");
       navigate("/login");
 
     } catch (error) {
@@ -75,6 +77,20 @@ function Register() {
             />
           </div>
 
+          <div className="relative">
+            <FaPhoneAlt className="absolute top-3 left-3 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Phone Number"
+              value={form.phoneNo}
+              onChange={(e) =>
+                setForm({ ...form, phoneNo: e.target.value })
+              }
+              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required
+            />
+          </div>
+
           {/* Email */}
           <div className="relative">
             <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
@@ -94,7 +110,7 @@ function Register() {
           <div className="relative">
             <FaLock className="absolute top-3 left-3 text-gray-400" />
             <input
-              type="password"
+              type="text"
               placeholder="Password"
               value={form.password}
               onChange={(e) =>
@@ -109,7 +125,7 @@ function Register() {
           <div className="relative">
             <FaLock className="absolute top-3 left-3 text-gray-400" />
             <input
-              type="password"
+              type="text"
               placeholder="Confirm Password"
               value={form.confirmPassword}
               onChange={(e) =>

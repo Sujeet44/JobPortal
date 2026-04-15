@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const navClass = ({ isActive }) =>
+  `transition-all duration-300 ${
+    isActive
+      ? "underline decoration-2 underline-offset-22 decoration-blue-800 text-blue-800"
+      : " hover:underline decoration-2 underline-offset-22 decoration-blue-800"
+  }`;
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -19,14 +25,14 @@ const Navbar = () => {
 
         <div className="flex gap-6">
 
-          <Link to="/" className="text-2xl font-bold text-blue-900">
+          <NavLink to="/" className="text-2xl font-bold text-blue-900">
             JobPortal
-          </Link>
+          </NavLink>
 
           <div className="hidden md:flex items-center gap-6 text-sm font-semibold">
-            <Link to="/" className="hover:text-blue-800">Home</Link>
-            <Link to="/" className="hover:text-blue-800">Company review</Link>
-            <Link to="/" className="hover:text-blue-800">Salary guide</Link>
+            <NavLink to="/" className={navClass}>Home</NavLink>
+            <NavLink to="/review" className={navClass}>Company review</NavLink>
+            <NavLink to="/salary" className={navClass}>Salary guide</NavLink>
           </div>
 
         </div>
@@ -40,30 +46,30 @@ const Navbar = () => {
               {/* NORMAL USER MENU */}
               {user.role === "user" && (
                 <>
-                  <Link to="/appliedJobs" className="hover:text-blue-800">
+                  <NavLink to="/appliedJobs" className={navClass}>
                     Applied Jobs
-                  </Link>
+                  </NavLink>
 
-                  <Link to="/dashboard" className="hover:text-blue-800">
+                  <NavLink to="/dashboard" className={navClass}>
                     My Profile
-                  </Link>
+                  </NavLink>
                 </>
               )}
 
               {/* ADMIN MENU */}
               {user.role === "admin" && (
                 <>
-                  <Link to="/admin" className="hover:text-blue-800">
+                  <NavLink to="/admin" className="hover:text-blue-800  hover:underline decoration-2 underline-offset-22 decoration-blue-800">
                     Admin Dashboard
-                  </Link>
+                  </NavLink>
 
-                  <Link to="/manageJobs" className="hover:text-blue-800">
+                  <NavLink to="/admin/manage-jobs" className="hover:text-blue-800">
                     Manage Jobs
-                  </Link>
+                  </NavLink>
 
-                  <Link to="/users" className="hover:text-blue-800">
+                  <NavLink to="/users" className="hover:text-blue-800">
                     Manage Users
-                  </Link>
+                  </NavLink>
                 </>
               )}
 
@@ -78,9 +84,9 @@ const Navbar = () => {
 
             </>
           ) : (
-            <Link to="/login" className="hover:text-blue-800">
+            <NavLink to="/login" className="hover:text-blue-800">
               Sign in
-            </Link>
+            </NavLink>
           )}
 
         </div>
@@ -99,20 +105,20 @@ const Navbar = () => {
       {menuOpen && (
         <div className="md:hidden flex flex-col px-6 pb-4 gap-3 text-sm font-semibold">
 
-          <Link to="/">Home</Link>
+          <NavLink to="/">Home</NavLink>
 
           {user && user.role === "user" && (
             <>
-              <Link to="/appliedJobs">Applied Jobs</Link>
-              <Link to="/dashboard">My Profile</Link>
+              <NavLink to="/appliedJobs">Applied Jobs</NavLink>
+              <NavLink to="/dashboard">My Profile</NavLink>
             </>
           )}
 
           {user && user.role === "admin" && (
             <>
-              <Link to="/adminDashboard">Admin Dashboard</Link>
-              <Link to="/manageJobs">Manage Jobs</Link>
-              <Link to="/users">Manage Users</Link>
+              <NavLink to="/adminDashboard">Admin Dashboard</NavLink>
+              <NavLink to="/manageJobs">Manage Jobs</NavLink>
+              <NavLink to="/users">Manage Users</NavLink>
             </>
           )}
 
@@ -128,7 +134,7 @@ const Navbar = () => {
               </button>
             </>
           ) : (
-            <Link to="/login">Sign in</Link>
+            <NavLink to="/login">Sign in</NavLink>
           )}
 
         </div>

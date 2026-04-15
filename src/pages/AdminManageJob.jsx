@@ -1,97 +1,44 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { setApplications, setLoading } from "../redux/applicationSlice";
-import API from "../services/api";
-import Shimmer from "../components/Shimmer";
-import toast from "react-hot-toast";
+import React, { useEffect, useState } from 'react'
+import API from '../services/api'
 
-function Jobs({ search, location }) {
-  const dispatch = useDispatch();
-  const [jobs, setJobs] = useState([]);
-  const [selectedJob, setSelectedJob] = useState(null);
-  const [isLoading,setIsLoading] = useState(true);
-  const [btnLoading,setBtnLoading] = useState(false);
-  const userkey = JSON.parse(localStorage.getItem("user"));
+const AdminManageJob = () => {
+    const[createdJob,setCreatedJob]  = useState([]);
+    const[selectedJob,setSelectedJob] = useState(null);
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        setIsLoading(true);
-        
-        const { data } = await API.get(`/jobs/getJobs?search=${search}&location=${location}`,);
-        setJobs(data.jobs);
-        console.log(data);
-        
-      } catch (error) {
-        
-      }finally{
-        setIsLoading(false);
-      }
-    };
+    const userkey = JSON.parse(localStorage.getItem('user'));
 
-    fetchJobs();
-  }, [search, location]);
+    useEffect(()=>{
+        const fetchJobs=async()=>{
+            const {data} = await API.get("/jobs/adminJobs");
+            setCreatedJob(data);
+            // setSelectedJob(createdJob[0]);
+            console.log(data)
+        }
+        fetchJobs();
+    },[])
 
-  useEffect(() => {
-    if (jobs.length>0) {
-      setSelectedJob(jobs[0]);
+
+      useEffect(() => {
+    if (createdJob.length>0) {
+      setSelectedJob(createdJob[0]);
     } else {
       setSelectedJob(null);
     }
-  }, [jobs]);
+  }, [createdJob]);
 
-  const handleApply = async (jobId) => {
-    setBtnLoading(true);
-    // console.log(jobId)
-    try {
-      await API.post(`/jobs/${jobId}/applyJob`);
-
-      toast.success("Application submitted successfully 🎉",{duration:5000});
-
-
-      // Update UI immediately
-      setJobs((prevJobs) =>
-        prevJobs.map((job) =>
-          job._id === jobId
-            ? { ...job, applicants:userkey.id }
-            : job,
-        ),
-      );
-
-      setBtnLoading(false)
-    } catch (error) {
-      toast.error("Failed to apply try again!!",{icon:"⚠️"})
-      console.log("Already applied or login required");
-    }
-  };
-
-  if (isLoading) return <Shimmer />;
-
-if (!isLoading && jobs.length === 0) {
-  return (
-    <div className="flex flex-col items-center justify-center h-[60vh] text-center">
-      <h2 className="text-2xl font-semibold text-gray-700">
-        🎉 You applied to all available jobs
-      </h2>
-      <p className="text-gray-500 mt-2">
-        Check back later for new opportunities
-      </p>
-    </div>
-  );
-}
 
   return (
     <div className="min-h-screen  p-6 md:mx-20 lg:mx-auto">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="flex justify-between gap-4">
-          <div className="w-full flex flex-col  lg:w-4/12">
+          <div className="w-full flex flex-col  lg:w-5/12">
             <h2 className="text-2xl font-bold mb-3 text-gray-800">
-              Jobs for you
+              View your Jobs
             </h2>
-            <p>Jobs based on your skills matches</p>
+            {/* <p>Jobs based on your skills matches</p> */}
 
             <div className=" flex flex-col gap-6">
-              {jobs.map((job) => (
+              {createdJob.map((job) => (
                 <div
                   key={job._id}
                   onClick={() => setSelectedJob(job)}
@@ -100,7 +47,7 @@ if (!isLoading && jobs.length === 0) {
                 >
                   <div className="flex justify-between">
                     <div>
-                      <h3 className="md:text-xl text-md font-bold text-gray-800 pb-3  ">
+                      <h3 className="md:text-xl text-md font-bold text-gray-800 jobTitle">
                         {job.title}
                       </h3>
 
@@ -110,14 +57,14 @@ if (!isLoading && jobs.length === 0) {
                           Company: {job.company}
                         </span>
                       </p>
-                      <p className="text-gray-600 text-sm ">
+                      <p className="text-gray-600 text-sm">
                         <span className="md:font-medium">
                           {job?.location || "Unknown"}
                         </span>
                       </p>
-                      <p className="text-gray-600 mb-2 text-sm py-2">
-                        <span className="md:font-medium bg-gray-200 py-1 px-2 rounded-xl">
-                          {job?.salary ? `₹${job?.salary} a month` : "₹Not Disclosed"}
+                      <p className="text-gray-600 mb-2 text-sm">
+                        <span className="md:font-medium">
+                          {job?.salary ? `₹${job?.salary}` : "₹Not Disclosed"}
                         </span>
                       </p>
                     </div>
@@ -142,11 +89,11 @@ if (!isLoading && jobs.length === 0) {
             </div>
           </div>
 
-          <div className="w-8/12 sticky top-4 bg-white border border-gray-200 rounded-xl p-6 shadow-md h-fit hidden lg:block">
+          <div className="w-7/12 sticky top-4 bg-white border border-gray-200 rounded-xl p-6 shadow-md h-fit hidden lg:block">
             {selectedJob ? (
               <div className="flex flex-col gap-6">
                 {/* Job Header */}
-                <div> 
+                <div>
                   <h2 className="text-2xl font-bold text-gray-800">
                     {selectedJob.title}
                   </h2>
@@ -160,7 +107,7 @@ if (!isLoading && jobs.length === 0) {
 
                 {/* Apply Button */}
                 <div>
-  {selectedJob?.applicants?.includes(userkey?.id) ? (
+  {/* {selectedJob?.applicants?.includes(userkey?.id) ? (
     <button
       disabled
       className="bg-blue-600 text-white px-6 py-2 rounded-lg opacity-50"
@@ -183,7 +130,7 @@ if (!isLoading && jobs.length === 0) {
         <span className="font-bold">Apply Now</span> 
       )}  
     </button>
-  )}
+  )} */}
 </div>
 
                 {/* Divider */}
@@ -237,7 +184,7 @@ if (!isLoading && jobs.length === 0) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Jobs;
+export default AdminManageJob
