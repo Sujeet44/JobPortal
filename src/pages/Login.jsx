@@ -31,7 +31,7 @@ function Login() {
       if (data.user.role === "admin") {
   navigate("/admin");
 } else {
-  navigate("/OTP");
+  navigate("/");
 }
     } catch (error) {
       setError("Invalid credentials");

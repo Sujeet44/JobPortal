@@ -76,12 +76,12 @@ const Home = () => {
             Find Jobs
           </button>
         </div>
-        <button
+        {/* <button
               onClick={listening ? stopListening : startListening}
               className={`px-5 py-1 rounded-full ${listening ? "bg-red-500" : "bg-blue-800"} text-white text-xl ml-3`}
             > 
              <i class="fa-solid fa-microphone"></i>
-            </button>
+            </button> */}
       </div>
 
       {!user ? (
